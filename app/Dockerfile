@@ -1,4 +1,5 @@
 FROM python:3.9-slim
 WORKDIR /app
-RUN echo "print('Hello from CKShetty GitOps PoC')" > main.py
+COPY main.py .
+EXPOSE 8080
 CMD ["python", "main.py"]
