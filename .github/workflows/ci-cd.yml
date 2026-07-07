@@ -1,4 +1,4 @@
-name: CKShetty4 GitOps Pipeline
+name: CKShetty GitOps Pipeline
 
 on:
   push:
@@ -9,39 +9,44 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets:DOCKERHUB_USERNAME }}
-        password: ${{ secrets:DOCKERHUB_TOKEN }}
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build and Push Docker Image
-      uses: docker/build-push-action@v4
-      with:
-        context: ./app
-        push: true
-        tags: |
-          ckshetty4/poc20-app:${{ github.sha }}
-          ckshetty4/poc20-app:latest
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./app
+          push: true
+          tags: |
+            ckshetty4/poc20-app:${{ github.sha }}
+            ckshetty4/poc20-app:latest
 
-    - name: Set up Kustomize
-      uses: imranismail/setup-kustomize@v2
+      - name: Set up Kustomize
+        uses: imranismail/setup-kustomize@v2
 
-    - name: Update Kustomize Image Tags
-      run: |
-        cd kustomize/overlays/dev
-        kustomize edit set image ckshetty4/poc20-app=ckshetty4/poc20-app:${{ github.sha }}
-        cd ../prod
-        kustomize edit set image ckshetty4/poc20-app=ckshetty4/poc20-app:${{ github.sha }}
+      - name: Update Kustomize Image Tags
+        run: |
+          cd kustomize/overlays/dev
+          kustomize edit set image ckshetty4/poc20-app=ckshetty4/poc20-app:${{ github.sha }}
 
-    - name: Commit and Push Changes to Git
-      run: |
-        git config --local user.email "ckshetty4-bot@github.com"
-        git config --local user.name "CKShetty4-CI"
-        git add kustomize/overlays/dev/kustomization.yaml kustomize/overlays/prod/kustomization.yaml
-        git commit -m "chore: sync tag ${{ github.sha }} [skip ci]"
-        git push https://${{ secrets:PAT_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref_name }}
+          cd ../prod
+          kustomize edit set image ckshetty4/poc20-app=ckshetty4/poc20-app:${{ github.sha }}
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "ckshetty-bot@github.com"
+          git config --local user.name "CKShetty-CI"
+
+          git add .
+
+          git commit -m "chore: sync tag ${{ github.sha }} [skip ci]" || echo "No changes"
+
+          git push https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref_name }}
