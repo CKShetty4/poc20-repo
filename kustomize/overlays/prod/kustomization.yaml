@@ -6,4 +6,5 @@ resources:
 - ../../base
 images:
 - name: ckshetty4/poc20-app
-  newTag: latest
+  newName: ckshetty4/poc20-app
+  newTag: 365486e01dfbce5d32e91a50e88f27fa2327ac0a
