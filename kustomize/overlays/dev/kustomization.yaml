@@ -5,5 +5,5 @@ namespace: dev
 resources:
 - ../../base
 images:
-- name: ckshetty/poc20-app
+- name: ckshetty4/poc20-app
   newTag: latest
