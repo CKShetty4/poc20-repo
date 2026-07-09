@@ -5,6 +5,6 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/plain")
         self.end_headers()
-        self.wfile.write(b"This is Me testing B4 Presentation")
+        self.wfile.write(b"This is Me testing Now for Presentation")
 
 HTTPServer(("0.0.0.0", 8080), Handler).serve_forever()
