@@ -7,4 +7,4 @@ resources:
 images:
 - name: ckshetty4/poc20-app
   newName: ckshetty4/poc20-app
-  newTag: 59e81fedebc6249e30f4301139194ee9dc16468c
+  newTag: e9bfe1bb043df4d1050282396ff2c237321ef0ad
